@@ -35,6 +35,7 @@ The files defined in the `$ALIASFILES` will contain _sections_ which `alias-pane
 ...
 # SECTION: Veggies
 alias carv="/usr/local/bin/carrot --version" # get carrot version
+alias brov="/usr/local/bin/broccoli --version" # get broccoli version
 
 # SECTION: My Meats
 alias eatmeats="/usr/local/bin/meat --rarity | grep "medium-rare" | eat" # eat only medium-rare meat
