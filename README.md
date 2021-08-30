@@ -36,6 +36,8 @@ The files defined in the `$ALIASFILES` will contain _sections_ which `alias-pane
 # SECTION: Veggies
 alias carv="/usr/local/bin/carrot --version" # get carrot version
 alias brov="/usr/local/bin/broccoli --version" # get broccoli version
+alias pepper="emacs ${HOME}/green_is_my_pepper.org"
+alias celery="firefox https://docs.celeryproject.org/en/stable/"
 
 # SECTION: My Meats
 alias eatmeats="/usr/local/bin/meat --rarity | grep "medium-rare" | eat" # eat only medium-rare meat
@@ -52,7 +54,7 @@ Running the example above:
 alias-panel
 ```
 
-![Alias panel screenshot](./screenshot.jpg)
+![Alias panel screenshot](./screenshot.png)
 
 # :scroll: TODO list :scroll:
 
