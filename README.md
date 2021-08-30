@@ -1,7 +1,7 @@
 # alias-panel
 Spit out a simple cheat-sheet for your Bash aliases onto the CLI.
 
-![Alias panel screenshot](./screenshot.png)
+![Alias panel screenshot](./screencap.png)
 
 # Setup
 
