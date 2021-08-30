@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/gdamore/tcell/v2"
@@ -164,7 +165,15 @@ func drawSection(s tcell.Screen, x, y, w, h int, sn parser.Section) error {
 	ay := y + 1
 	aw := w - 2
 	var ah int
-	for _, a := range sn.Aliases {
+
+	// Iterate through the aliases in alphabetical order
+	as := make([]string, 0)
+	for an := range sn.Aliases {
+		as = append(as, an)
+	}
+	sort.Strings(as)
+	for _, an := range as {
+		a := sn.Aliases[an]
 		btext := a.Name + ": " + a.Cmd
 		ah = minHeight(aw, btext)
 
@@ -191,9 +200,8 @@ func maxColumns(w, miw, maw int) int {
 
 	// NOTE: We assume that margins are 2 spaces. (In general, even-numbered
 	// margins are less messier to work with.)
-
-	as := w - 2          // available (horizontal) space
-	x1 := as / (miw + 2) // deliberate integer division
+	as := w - 2 // available (horizontal) space
+	x1 := as / (miw + 2)
 	x2 := as / (maw + 2)
 	if x1 > x2 {
 		return x1
@@ -237,20 +245,30 @@ func drawPanels(s tcell.Screen, sm map[string]parser.Section) {
 	}
 
 	// TODO: Stack panels column-wise (and handle cut-offs)
-	// TODO: Implement a work-around for undefined order for maps
-	for p := 0; p < np; p++ {
+	// Iterate through the sections in alphabetical order (label)
+	sls := make([]string, 0)
+	for sl := range sm {
+		sls = append(sls, sl)
+	}
+	sort.Strings(sls)
+	p := 0
+	for _, sl := range sls {
+		if p >= np {
+			break
+		}
 		ph = 0
-		for _, a := range ss[p].Aliases {
+		for _, a := range sm[sl].Aliases {
 			btext := a.Name + ": " + a.Cmd
 			ph += minHeight(pw-2, btext)
 		}
-		log.Infof("ph (%v): %v", ss[p].Label, ph)
-		err := drawSection(s, px, py, pw, ph+2, ss[p])
+		log.Infof("ph (%v): %v", sm[sl].Label, ph)
+		err := drawSection(s, px, py, pw, ph+2, sm[sl])
 		if err != nil {
 			log.Error(err)
 			return
 		}
 		px += pw + m
+		p++
 	}
 }
 

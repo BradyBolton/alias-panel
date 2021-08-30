@@ -27,7 +27,7 @@ type Section struct {
 func parseAlias(s string) (Alias, error) {
 	var a Alias
 	cp := `alias (?P<name>[_a-zA-Z0-9]+)=['"](?P<command>.+)['"][^#]*#(?P<comment>.+)$`
-	ap := `alias (?P<name>[_a-zA-Z0-9]+)=['"](?P<command>.+)['"]$`
+	ap := `alias (?P<name>[_a-zA-Z0-9]+)=['"](?P<command>.+)['"]`
 	ra := regexp.MustCompile(ap)
 	rc := regexp.MustCompile(cp)
 

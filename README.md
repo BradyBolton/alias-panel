@@ -61,6 +61,6 @@ Some very important things I need to finish:
 - [ ] Stack section panels vertically, from left to right
 - [ ] Make margins configurable via optional argument
 - [ ] Make logging configurable via optional argument
-- [ ] Account for undefined order when iterating maps in Golang
+- [X] Account for undefined order when iterating maps in Golang
 - [ ] Make things prettier (colors, bold, etc.)
 - [ ] Show (optional) alias comments/descriptions 
