@@ -232,8 +232,8 @@ func maxColumnWidth(w, nc, m int) int {
 }
 
 // Draw panels for in the terminal, one for each section in Section map sm with
-// margin m.
-func drawPanels(s tcell.Screen, sm map[string]parser.Section, m int) {
+// margin m, starting with Section at index p.
+func drawPanels(s tcell.Screen, sm map[string]parser.Section, m, p int) {
 	w, h := s.Size()
 
 	// Render nothing if space is too small
@@ -257,7 +257,6 @@ func drawPanels(s tcell.Screen, sm map[string]parser.Section, m int) {
 	}
 	sort.Strings(sls)
 
-	p := 0
 loop:
 	for c := 0; c < nc; c++ { // Fill columns top to bottom left to right
 		py := m
@@ -311,6 +310,12 @@ func DrawScreen(sm map[string]parser.Section, m int) {
 		Foreground(tcell.ColorWhite))
 	s.Clear()
 
+	// Style for top-left message to indicate current page status
+	mst := tcell.StyleDefault.
+		Foreground(tcell.ColorBlue)
+	var msg string // Page status message
+
+	cp := 0
 	quit := make(chan struct{})
 	go func() {
 		for {
@@ -325,11 +330,47 @@ func DrawScreen(sm map[string]parser.Section, m int) {
 						close(quit)
 						return
 					}
+					// Page (next) down
+					if ev.Rune() == 'J' || ev.Rune() == 'j' || ev.Rune() == 'L' || ev.Rune() == 'l' {
+						if cp+1 >= len(sm) {
+							msg = fmt.Sprintf("[%v/%v] No more sections! ([J] to advance, [K] go back)", cp+1, len(sm))
+							s.Sync()
+							s.Clear()
+							drawPanels(s, sm, m, cp)
+							emitStr(s, 0, 0, mst, msg)
+							continue
+						}
+						cp++
+						msg = fmt.Sprintf("[%v/%v] ([J] to advance, [K] go back)", cp+1, len(sm))
+						s.Sync()
+						s.Clear()
+						drawPanels(s, sm, m, cp)
+						emitStr(s, 0, 0, mst, msg)
+					}
+					// Page (prev) up
+					if ev.Rune() == 'K' || ev.Rune() == 'k' || ev.Rune() == 'H' || ev.Rune() == 'h' {
+						if cp-1 < 0 {
+							msg = fmt.Sprintf("[%v/%v] No more preceeding sections ([J] to advance, [K] go back)!", cp+1, len(sm))
+							s.Sync()
+							s.Clear()
+							drawPanels(s, sm, m, cp)
+							emitStr(s, 0, 0, mst, msg)
+							continue
+						}
+						cp--
+						s.Sync()
+						s.Clear()
+						drawPanels(s, sm, m, cp)
+						msg = fmt.Sprintf("[%v/%v] ([J] to advance, [K] go back)", cp+1, len(sm))
+						emitStr(s, 0, 0, mst, msg)
+					}
 				}
 			case *tcell.EventResize:
 				s.Sync()
 				s.Clear()
-				drawPanels(s, sm, m)
+				drawPanels(s, sm, m, cp)
+				msg = fmt.Sprintf("[%v/%v] ([J] to advance, [K] go back)", cp+1, len(sm))
+				emitStr(s, 0, 0, mst, msg)
 			}
 		}
 	}()
