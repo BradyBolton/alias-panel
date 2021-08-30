@@ -66,3 +66,4 @@ Some very important things I need to finish:
 - [X] Account for undefined order when iterating maps in Golang
 - [ ] Make things prettier (colors, bold, etc.)
 - [ ] Show (optional) alias comments/descriptions 
+- [ ] Add paging (with vim-like controls?)
