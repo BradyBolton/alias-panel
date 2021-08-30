@@ -65,5 +65,6 @@ Some very important things I need to finish:
 - [X] Make logging configurable via optional argument
 - [X] Account for undefined order when iterating maps in Golang
 - [X] Make things prettier (colors, bold, etc.)
-- [ ] Show (optional) alias comments/descriptions 
+- [ ] Show (optional) alias comments/descriptions (in italics)
 - [ ] Add paging (with vim-like controls?)
+- [ ] Parsing `*_aliases` files is not *fool proof* in terms of capturing *all* aliases, but perhaps we can parse a call to `alias` and stuff them into the generic Aliases section?
