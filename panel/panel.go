@@ -224,8 +224,9 @@ func maxPanels(w, m int) (int, int) {
 	return np, pw
 }
 
-// Draw panels for in the terminal, one for each section in Section map sm.
-func drawPanels(s tcell.Screen, sm map[string]parser.Section) {
+// Draw panels for in the terminal, one for each section in Section map sm with
+// margin m.
+func drawPanels(s tcell.Screen, sm map[string]parser.Section, m int) {
 	w, h := s.Size()
 
 	// Render nothing if space is too small
@@ -233,7 +234,6 @@ func drawPanels(s tcell.Screen, sm map[string]parser.Section) {
 		return
 	}
 
-	m := 2 // TODO: Make this configurable (optional argument)?
 	np, pw := maxPanels(w, m)
 	var ph int
 	px := m
@@ -272,8 +272,8 @@ func drawPanels(s tcell.Screen, sm map[string]parser.Section) {
 	}
 }
 
-// Draw panels on screen for sections in Section map sm.
-func DrawScreen(sm map[string]parser.Section) {
+// Draw panels on screen for sections in Section map sm with margin m.
+func DrawScreen(sm map[string]parser.Section, m int) {
 	tcell.SetEncodingFallback(tcell.EncodingFallbackASCII)
 
 	s, err := tcell.NewScreen()
@@ -309,7 +309,7 @@ func DrawScreen(sm map[string]parser.Section) {
 			case *tcell.EventResize:
 				s.Sync()
 				s.Clear()
-				drawPanels(s, sm)
+				drawPanels(s, sm, m)
 			}
 		}
 	}()
