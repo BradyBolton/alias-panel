@@ -64,6 +64,6 @@ Some very important things I need to finish:
 - [X] Make margins configurable via optional argument
 - [X] Make logging configurable via optional argument
 - [X] Account for undefined order when iterating maps in Golang
-- [ ] Make things prettier (colors, bold, etc.)
+- [X] Make things prettier (colors, bold, etc.)
 - [ ] Show (optional) alias comments/descriptions 
 - [ ] Add paging (with vim-like controls?)

@@ -155,10 +155,12 @@ func drawSection(s tcell.Screen, x, y, w, h int, sn parser.Section) error {
 	label := fmt.Sprintf("[%v]", ltext)
 	hpadding := (w - len(label)) / 2
 	lx := x + hpadding
-	st = tcell.StyleDefault.
-		Foreground(tcell.ColorRed)
-	emitStr(s, lx, y, st, label)
-	s.Show()
+	bst := tcell.StyleDefault.
+		Foreground(tcell.ColorWhite)
+	nst := tcell.StyleDefault.
+		Foreground(tcell.ColorRed).
+		Bold(true)
+	emitStr(s, lx, y, nst, label)
 
 	// Draw body text
 	ax := x + 1
@@ -174,8 +176,9 @@ func drawSection(s tcell.Screen, x, y, w, h int, sn parser.Section) error {
 	sort.Strings(as)
 	for _, an := range as {
 		a := sn.Aliases[an]
-		btext := a.Name + ": " + a.Cmd
+		btext := strings.Repeat(" ", len(a.Name)) + ": " + a.Cmd
 		ah = minHeight(aw, btext)
+		nh := minHeight(aw, a.Name)
 
 		// Short-circuit if this alias goes out of bounds
 		if (ay+ah)-y >= h {
@@ -183,7 +186,11 @@ func drawSection(s tcell.Screen, x, y, w, h int, sn parser.Section) error {
 		}
 
 		// Otherwise print the alias
-		err := drawTextBox(s, ax, ay, aw, ah, st, btext)
+		err := drawTextBox(s, ax, ay, aw, ah, bst, btext) // cmd
+		if err != nil {
+			log.Errorf("drawSection: Issue parsing (%v)", err)
+		}
+		err = drawTextBox(s, ax, ay, aw, nh, nst, a.Name) // name
 		if err != nil {
 			log.Errorf("drawSection: Issue parsing (%v)", err)
 		}
