@@ -1,6 +1,8 @@
 # alias-panel
 Spit out a simple cheat-sheet for your Bash aliases onto the CLI.
 
+![Alias panel screenshot](./screenshot.png)
+
 # Setup
 
 ```console
@@ -48,13 +50,11 @@ The alias `carv` is under the section `Veggies`, and so it will appear in the fr
 
 # Running
 
-Running the example above:
+Running the example above (yields the screenshot):
 
 ```console
 alias-panel
 ```
-
-![Alias panel screenshot](./screenshot.png)
 
 # :scroll: TODO list :scroll:
 
