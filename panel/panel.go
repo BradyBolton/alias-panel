@@ -269,7 +269,7 @@ loop:
 				btext := a.Name + ": " + a.Cmd
 				bh += minHeight(pw-2, btext)
 			}
-			if py+bh-1 >= h {
+			if py+bh-1 >= (h - 2) {
 				continue loop
 			}
 
