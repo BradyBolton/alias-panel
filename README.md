@@ -70,3 +70,5 @@ Some very important things I need to finish:
 - [ ] Add paging via CTRL-D and CTRL-U for larger jumps
 - [ ] If 0 sections had space to render, should we render a cut-off section or indicate not enough space? (Or both?)
 - [ ] Parsing `*_aliases` files is not *fool proof* in terms of capturing *all* aliases, but perhaps we can parse a call to `alias` and stuff them into the generic Aliases section?
+- [ ] Search when hitting `/`?
+- [ ] Use colors to highlight/indicate which Section is "current"
