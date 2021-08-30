@@ -58,7 +58,7 @@ alias-panel
 
 Some very important things I need to finish:
 
-- [ ] Stack section panels vertically, from left to right
+- [X] Stack section panels vertically, from left to right
 - [X] Make margins configurable via optional argument
 - [X] Make logging configurable via optional argument
 - [X] Account for undefined order when iterating maps in Golang

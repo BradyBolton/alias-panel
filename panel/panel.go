@@ -203,25 +203,25 @@ func maxColumns(w, miw, maw int) int {
 	as := w - 2 // available (horizontal) space
 	x1 := as / (miw + 2)
 	x2 := as / (maw + 2)
+	var nc int
 	if x1 > x2 {
-		return x1
+		nc = x1
 	}
-	return x2
-}
-
-// Return the number of vertical panels a window of width w can support and
-// recommend a width for each panel given margin m in between each panel.
-func maxPanels(w, m int) (int, int) {
-	np := maxColumns(w, minPanelWidth, maxPanelWidth)
+	nc = x2
 
 	// Terminal window is only large enough for one column. In this case,
 	// we allow the single column to be resized smaller than usual
-	if np == 0 {
-		np = 1
+	if nc == 0 {
+		nc = 1
 	}
+	return nc
+}
 
-	pw := (w - (1+np)*m) / np
-	return np, pw
+// maxColumnWidth returns a recommended width for panel on a w-wide window
+// for nc columns with a margin of m in between each panel.
+func maxColumnWidth(w, nc, m int) int {
+	pw := (w - (1+nc)*m) / nc
+	return pw
 }
 
 // Draw panels for in the terminal, one for each section in Section map sm with
@@ -234,41 +234,54 @@ func drawPanels(s tcell.Screen, sm map[string]parser.Section, m int) {
 		return
 	}
 
-	np, pw := maxPanels(w, m)
-	var ph int
-	px := m
-	py := m
+	// Help message
+	st := tcell.StyleDefault.
+		Foreground(tcell.ColorWhite)
+	msg := "Press [Q]uit to exit"
+	emitStr(s, w-len(msg), 0, st, msg)
 
-	ss := make([]parser.Section, 0)
-	for _, v := range sm {
-		ss = append(ss, v)
-	}
+	nc := maxColumns(w, minPanelWidth, maxPanelWidth)
+	pw := maxColumnWidth(w, nc, m)
 
-	// TODO: Stack panels column-wise (and handle cut-offs)
 	// Iterate through the sections in alphabetical order (label)
 	sls := make([]string, 0)
 	for sl := range sm {
 		sls = append(sls, sl)
 	}
 	sort.Strings(sls)
+
 	p := 0
-	for _, sl := range sls {
-		if p >= np {
-			break
+loop:
+	for c := 0; c < nc; c++ { // Fill columns top to bottom left to right
+		py := m
+		px := m + (pw+m)*(c)
+
+		for py < h {
+			// Stop if all panels are drawn
+			if p >= len(sm) {
+				break loop
+			}
+			sl := sls[p]
+
+			// Stop column if no more vertical space
+			bh := 0 // body text height
+			for _, a := range sm[sl].Aliases {
+				btext := a.Name + ": " + a.Cmd
+				bh += minHeight(pw-2, btext)
+			}
+			if py+bh-1 >= h {
+				continue loop
+			}
+
+			// Otherwise draw the new section
+			err := drawSection(s, px, py, pw, bh+2, sm[sl])
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			py += bh + 2
+			p++
 		}
-		ph = 0
-		for _, a := range sm[sl].Aliases {
-			btext := a.Name + ": " + a.Cmd
-			ph += minHeight(pw-2, btext)
-		}
-		log.Infof("ph (%v): %v", sm[sl].Label, ph)
-		err := drawSection(s, px, py, pw, ph+2, sm[sl])
-		if err != nil {
-			log.Error(err)
-			return
-		}
-		px += pw + m
-		p++
 	}
 }
 
