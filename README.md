@@ -66,5 +66,7 @@ Some very important things I need to finish:
 - [X] Account for undefined order when iterating maps in Golang
 - [X] Make things prettier (colors, bold, etc.)
 - [ ] Show (optional) alias comments/descriptions (in italics)
-- [ ] Add paging (with vim-like controls?)
+- [X] Add paging (with vim-like controls?)
+- [ ] Add paging via CTRL-D and CTRL-U for larger jumps
+- [ ] If 0 sections had space to render, should we render a cut-off section or indicate not enough space? (Or both?)
 - [ ] Parsing `*_aliases` files is not *fool proof* in terms of capturing *all* aliases, but perhaps we can parse a call to `alias` and stuff them into the generic Aliases section?
